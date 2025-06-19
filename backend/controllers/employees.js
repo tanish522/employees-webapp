@@ -1,5 +1,6 @@
 const {
     fetchEmployees,
+    getEmployeeDataById,
     fetchEmployeeCount,
     insertEmployee,
     updateEmployeeById,
@@ -25,6 +26,19 @@ const getEmployees = async (req, res) => {
         });
     } catch (err) {
         console.error('Error fetching employees:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+const getEmployeeById = async (req, res) => {
+    try {
+        const employeeData = await getEmployeeDataById(req.params.id);
+        if (employeeData === 0) {
+            return res.status(404).json({ error: 'Employee not found' });
+        }
+        return res.status(200).json(employeeData)
+    } catch (err) {
+        console.error('Error getting employee by ID:', err);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
@@ -64,6 +78,7 @@ const deleteEmployee = async (req, res) => {
 
 module.exports = {
     getEmployees,
+    getEmployeeById,
     addEmployees,
     updateEmployee,
     deleteEmployee,

@@ -1,13 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
-const { getEmployees, addEmployees, updateEmployee, deleteEmployee } = require('../controllers/employees');
+const validateEmployee = require('../middlewares/validateEmployee');
+const { getEmployees, getEmployeeById, addEmployees, updateEmployee, deleteEmployee } = require('../controllers/employees');
 
 router.get('/', getEmployees);
 
-router.post('/', addEmployees);
+router.get('/:id', getEmployeeById);
 
-router.put('/:id', updateEmployee);
+router.post('/', validateEmployee, addEmployees);
+
+router.put('/:id', validateEmployee, updateEmployee);
 
 router.delete('/:id', deleteEmployee);
 

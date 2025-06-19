@@ -14,6 +14,23 @@ const fetchEmployees = (limit, offset) => {
     });
 };
 
+const getEmployeeDataById = (id) => {
+    return new Promise((resolve, reject) => {
+        db.query(
+            `SELECT e.id, e.name, e.email, e.salary, e.dob, e.phone, e.photo, e.status, e.department_id, d.name AS department
+             FROM employee e
+             JOIN department d ON e.department_id = d.id
+             WHERE e.id = ?`,
+            [id],
+            (err, rows) => {
+                if (err) return reject(err);
+                if (rows.length === 0) return resolve(null);
+                resolve(rows[0]);
+            }
+        );
+    });
+};
+
 const fetchEmployeeCount = () => {
     return new Promise((resolve, reject) => {
         db.query(`SELECT COUNT(*) AS total FROM employee`, (err, rows) =>
@@ -57,6 +74,7 @@ const deleteEmployeeById = (id) => {
 
 module.exports = {
     fetchEmployees,
+    getEmployeeDataById,
     fetchEmployeeCount,
     insertEmployee,
     updateEmployeeById,
